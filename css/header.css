@@ -1,0 +1,60 @@
+.header {
+    box-shadow: 2px 4px 8px 0px #0000001a;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+
+.header__body{
+    display: flex;
+    padding: 20px 0;
+    align-items: center;
+    gap: 20px;
+}
+
+
+.header__logo{
+    width: 30%;
+    height: 30%;
+}
+
+.header__account{
+}
+
+.account{
+    position: relative;
+
+    @media (max-width: 600px) {
+        display: none;
+      }
+}
+
+.account__body {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  
+    cursor: pointer;
+  }
+  
+  .account__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  .account__info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  
+    @media (max-width: 1000px) {
+      display: none;
+    }
+  }
+  
+  .account__name {
+    color: var(--dark0);
+  }
+  

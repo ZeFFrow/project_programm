@@ -3,25 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style.css" />
-    <title>Крестики-нолики</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=National+Park:wght@200..800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <title>Игры-онлайн</title>
 </head>
 <body>
-    <h1>Крестики-нолики</h1>
-    <div class="status">Ход: X</div>
-    <div class="game-board" id="board">
-        <div class="cell" data-index="0"></div>
-        <div class="cell" data-index="1"></div>
-        <div class="cell" data-index="2"></div>
-        <div class="cell" data-index="3"></div>
-        <div class="cell" data-index="4"></div>
-        <div class="cell" data-index="5"></div>
-        <div class="cell" data-index="6"></div>
-        <div class="cell" data-index="7"></div>
-        <div class="cell" data-index="8"></div>
-    </div>
-    <button class="restart-btn" id="restart">Начать заново</button>
-
+    <header class="header">
+        <div class="container">
+            <div class="header__body">
+                <a href="index.html" class="header__logo">
+                    <img src="img/ikon.jpg" class="header__logo" alt="Игры-онлайн"/>
+                </a>
+                <!-- Профиль -->
+                <a href="#" class="header__account account">
+                    <div class="account__body">
+                        <img
+                          src="img/avatar.png"
+                          alt="avatar"
+                          class="account__avatar"
+                        />
+                        <div class="account__info">
+                          <div class="account__name">Player</div>
+                        </div>
+                    </div>
+                </a>
+                <button id="theme-toggle">Переключить тему</button>
+            </div>
+        </div>
+    </header>
+    <main>
+        
+    </main>
     <script src="./js/script.js" type="module"></script>
+    <script src="./js/theme-toggle.js" type="module"></script>
 </body>
-</html>
+</html> 
