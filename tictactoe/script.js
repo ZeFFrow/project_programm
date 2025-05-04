@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const board = document.getElementById('board');
     const cells = document.querySelectorAll('.cell');
-    const status = document.querySelector('.status');
+    const status = document.getElementById('status');
     const restartBtn = document.getElementById('restart');
     
     let currentPlayer = 'X';
@@ -9,83 +9,82 @@ document.addEventListener('DOMContentLoaded', () => {
     let gameActive = true;
     
     const winningConditions = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8], // строки
-        [0, 3, 6], [1, 4, 7], [2, 5, 8], // столбцы
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // горизонтали
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // вертикали
         [0, 4, 8], [2, 4, 6]             // диагонали
     ];
     
     // Обработчик клика по ячейке
-    function handleCellClick(e) {
+    const handleCellClick = (e) => {
         const clickedCell = e.target;
         const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
         
-        if (gameState[clickedCellIndex] !== '' || !gameActive) {
-            return;
-        }
+        // Если ячейка уже занята или игра не активна - выходим
+        if (gameState[clickedCellIndex] !== '' || !gameActive) return;
         
-        updateCell(clickedCell, clickedCellIndex);
+        // Обновляем состояние игры и отображаем ход
+        gameState[clickedCellIndex] = currentPlayer;
+        clickedCell.classList.add(currentPlayer === 'X' ? 'x' : 'o');
+        
+        // Проверяем на победу или ничью
         checkResult();
-    }
+    };
     
-    // Обновление ячейки
-    function updateCell(cell, index) {
-        gameState[index] = currentPlayer;
-        cell.textContent = currentPlayer;
-        cell.classList.add(currentPlayer.toLowerCase());
-    }
-    
-    // Смена игрока
-    function changePlayer() {
-        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-        status.textContent = `Ход: ${currentPlayer}`;
-    }
-    
-    // Проверка результата
-    function checkResult() {
+    // Проверка результата игры
+    const checkResult = () => {
         let roundWon = false;
         
+        // Проверяем все выигрышные комбинации
         for (let i = 0; i < winningConditions.length; i++) {
             const [a, b, c] = winningConditions[i];
             
-            if (gameState[a] === '' || gameState[b] === '' || gameState[c] === '') {
-                continue;
-            }
+            if (gameState[a] === '' || gameState[b] === '' || gameState[c] === '') continue;
             
             if (gameState[a] === gameState[b] && gameState[b] === gameState[c]) {
                 roundWon = true;
+                // Подсвечиваем выигрышную комбинацию
+                cells[a].classList.add('win');
+                cells[b].classList.add('win');
+                cells[c].classList.add('win');
                 break;
             }
         }
         
+        // Если есть победитель
         if (roundWon) {
-            status.textContent = `Игрок ${currentPlayer} победил!`;
+            status.textContent = `Победил игрок ${currentPlayer}!`;
             gameActive = false;
             return;
         }
         
+        // Проверка на ничью
         if (!gameState.includes('')) {
             status.textContent = 'Ничья!';
             gameActive = false;
             return;
         }
         
-        changePlayer();
-    }
+        // Смена игрока
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        status.textContent = `Ход: ${currentPlayer}`;
+    };
     
     // Сброс игры
-    function restartGame() {
+    const restartGame = () => {
         currentPlayer = 'X';
         gameState = ['', '', '', '', '', '', '', '', ''];
         gameActive = true;
         status.textContent = `Ход: ${currentPlayer}`;
         
         cells.forEach(cell => {
-            cell.textContent = '';
-            cell.classList.remove('x', 'o');
+            cell.classList.remove('x', 'o', 'win');
         });
-    }
+    };
     
-    // Назначение обработчиков событий
-    cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+    // Добавляем обработчики событий
+    cells.forEach(cell => {
+        cell.addEventListener('click', handleCellClick);
+    });
+    
     restartBtn.addEventListener('click', restartGame);
 });

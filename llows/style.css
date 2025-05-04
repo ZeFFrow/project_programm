@@ -1,0 +1,143 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: #333;
+}
+
+.game-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+h1 {
+    color: #2c3e50;
+    margin-top: 0;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.hangman-container {
+    margin: 1rem auto;
+}
+
+.base {
+    stroke: #333;
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+
+.body-part {
+    stroke: #e74c3c;
+    stroke-width: 3;
+    stroke-linecap: round;
+    fill: none;
+}
+
+#head {
+    stroke: #e74c3c;
+    fill: none;
+}
+
+.word-display {
+    font-size: 2rem;
+    letter-spacing: 0.5rem;
+    margin: 1.5rem 0;
+    min-height: 3rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.keyboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.key {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.key:hover:not(:disabled) {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+.key:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.key.correct {
+    background-color: #2ecc71;
+}
+
+.key.incorrect {
+    background-color: #e74c3c;
+}
+
+.message {
+    min-height: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    color: #e74c3c;
+}
+
+.restart-btn {
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 1rem;
+}
+
+.restart-btn:hover {
+    background-color: #1a252f;
+}
+
+@media (max-width: 480px) {
+    .game-container {
+        padding: 1rem;
+    }
+    
+    .key {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1rem;
+    }
+    
+    .word-display {
+        font-size: 1.5rem;
+        letter-spacing: 0.3rem;
+    }
+}

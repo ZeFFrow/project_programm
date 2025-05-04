@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Pong</h1>
+        <div class="score-container">
+            <div class="score" id="player-score">0</div>
+            <div class="score" id="ai-score">0</div>
+        </div>
+        
+        <canvas id="game-canvas" width="800" height="500"></canvas>
+        
+        <div class="controls">
+            <div class="difficulty">
+                <label for="difficulty">Сложность:</label>
+                <select id="difficulty">
+                    <option value="easy">Легкая</option>
+                    <option value="medium" selected>Средняя</option>
+                    <option value="hard">Сложная</option>
+                </select>
+            </div>
+            <button id="pause-btn">Пауза (P)</button>
+            <button id="restart-btn">Новая игра (R)</button>
+            <button onclick="window.history.back()">Назад</button>
+        </div>
+        
+        <div class="instructions">
+            <p>Управление: W/S или ↑/↓</p>
+            <p>Пауза: P | Новая игра: R</p>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

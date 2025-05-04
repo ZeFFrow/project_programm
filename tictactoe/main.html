@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../tictactoe/style.css" />
     <title>Крестики-нолики</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+    <div class="game-container">
         <h1>Крестики-нолики</h1>
-        <div class="status">Ход: X</div>
-        <div class="game-board" id="board">
+        <div class="status" id="status">Ход: X</div>
+        <div class="board" id="board">
             <div class="cell" data-index="0"></div>
             <div class="cell" data-index="1"></div>
             <div class="cell" data-index="2"></div>
@@ -20,7 +21,9 @@
             <div class="cell" data-index="7"></div>
             <div class="cell" data-index="8"></div>
         </div>
-        <button class="restart-btn" id="restart">Начать заново</button>
-    <script src="../tictactoe/script.js" type="module"></script>
+        <button class="restart-btn" id="restart">Новая игра</button>
+        <button class="restart-btn" onclick="window.history.back()">Назад</button>
+    </div>
+    <script src="./script.js"></script>
 </body>
 </html>

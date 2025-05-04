@@ -1,70 +1,119 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.game-container {
+    text-align: center;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
 }
 
 h1 {
-    color: #333;
-    margin-bottom: 20px;
+    margin-top: 0;
+    color: #2c3e50;
 }
 
-.game-board {
+.status {
+    margin: 20px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.board {
     display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
-    gap: 5px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    margin: 20px auto;
 }
 
 .cell {
     width: 100px;
     height: 100px;
-    background-color: #fff;
+    background-color: #ecf0f1;
     border-radius: 5px;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-size: 48px;
-    font-weight: bold;
+    align-items: center;
+    font-size: 3rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    position: relative;
 }
 
 .cell:hover {
-    background-color: #e0e0e0;
+    background-color: #d6eaf8;
 }
 
-.status {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #333;
+.cell.x::before, .cell.x::after,
+.cell.o::before {
+    content: '';
+    position: absolute;
+    background-color: #2c3e50;
+}
+
+.cell.x::before, .cell.x::after {
+    width: 80%;
+    height: 8px;
+    top: 50%;
+    left: 10%;
+}
+
+.cell.x::before {
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.cell.x::after {
+    transform: translateY(-50%) rotate(-45deg);
+}
+
+.cell.o::before {
+    width: 60%;
+    height: 60%;
+    border-radius: 50%;
+    border: 8px solid #e74c3c;
+}
+
+.cell.win {
+    background-color: #a9dfbf;
+    animation: pulse 0.5s ease 2;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 .restart-btn {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4CAF50;
+    background-color: #3498db;
     color: white;
     border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-top: 20px;
 }
 
 .restart-btn:hover {
-    background-color: #45a049;
+    background-color: #2980b9;
 }
 
-.x {
-    color: #f44336;
-}
-
-.o {
-    color: #2196F3;
+@media (max-width: 480px) {
+    .cell {
+        width: 80px;
+        height: 80px;
+    }
 }

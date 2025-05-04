@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Виселица</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Виселица</h1>
+        <div class="game-info">
+            <div class="mistakes">Ошибки: <span id="mistakes">0/6</span></div>
+            <div class="category">Категория: <span id="category">Животные</span></div>
+        </div>
+        
+        <div class="hangman-container">
+            <svg id="hangman" width="200" height="200" viewBox="0 0 200 200">
+                <!-- Основа виселицы -->
+                <line class="base" x1="20" y1="180" x2="100" y2="180"/>
+                <line class="base" x1="60" y1="180" x2="60" y2="20"/>
+                <line class="base" x1="60" y1="20" x2="140" y2="20"/>
+                <line class="base" x1="140" y1="20" x2="140" y2="40"/>
+                
+                <!-- Части тела (изначально скрыты) -->
+                <circle class="body-part" id="head" cx="140" cy="55" r="15" style="display: none;"/>
+                <line class="body-part" id="body" x1="140" y1="70" x2="140" y2="120" style="display: none;"/>
+                <line class="body-part" id="left-arm" x1="140" y1="80" x2="110" y2="100" style="display: none;"/>
+                <line class="body-part" id="right-arm" x1="140" y1="80" x2="170" y2="100" style="display: none;"/>
+                <line class="body-part" id="left-leg" x1="140" y1="120" x2="120" y2="150" style="display: none;"/>
+                <line class="body-part" id="right-leg" x1="140" y1="120" x2="160" y2="150" style="display: none;"/>
+            </svg>
+        </div>
+        
+        <div class="word-display" id="word-display"></div>
+        
+        <div class="keyboard" id="keyboard"></div>
+        
+        <div class="message" id="message"></div>
+        
+        <button class="restart-btn" id="restart">Новая игра</button>
+        <button class="restart-btn" onclick="window.history.back()">Назад</button>
+    </div>
+    
+    <script src="./script.js"></script>
+</body>
+</html>

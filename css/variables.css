@@ -1,7 +1,7 @@
 :root{
     --padding: 15px;
 	--container: 1208px;
-    --font-family: 'National Park', sans-serif;
+    --font-family: "Inter", sans-serif;;
     --default-size: 16px;
     /* Цвета */
     --white: #fff;

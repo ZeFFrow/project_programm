@@ -1,0 +1,105 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #222;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.game-container {
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #4CAF50;
+}
+
+.score-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 200px;
+    margin: 0 auto 20px;
+    font-size: 1.5rem;
+}
+
+.score {
+    padding: 0 20px;
+}
+
+#game-canvas {
+    background-color: #000;
+    border: 2px solid #4CAF50;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+}
+
+.controls {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+.difficulty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+select {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #4CAF50;
+    background-color: #333;
+    color: white;
+}
+
+.instructions {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+@media (max-width: 850px) {
+    #game-canvas {
+        width: 95vw;
+        height: calc(95vw * 5/8);
+    }
+}
+
+@media (max-width: 500px) {
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+}

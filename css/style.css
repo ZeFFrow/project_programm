@@ -29,3 +29,28 @@ button {
     border-radius: 4px;
     cursor: pointer;
   }
+
+.title__text{
+    font-family: var(--font-family);
+}
+
+.game{
+    padding-left: 50px;
+    padding-top: 90px;
+    width: 272px;
+    height: 200px;
+    float: left;
+}
+
+.game__logo{
+    display: block;
+    width: 272px;
+    height: 200px;
+    border-radius: 4px;
+    object-fit: cover;
+    position: relative;
+}
+
+.game__name{
+    padding-top: -10px;
+}
