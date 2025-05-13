@@ -8,6 +8,7 @@ body{
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
+    list-style: none;
 }
 
 
@@ -54,3 +55,7 @@ button {
 .game__name{
     padding-top: -10px;
 }
+
+*{
+    list-style: none;
+  }
