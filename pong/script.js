@@ -1,422 +1,300 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Получаем элементы DOM
-    const canvas = document.getElementById('game-canvas');
-    const ctx = canvas.getContext('2d');
-    const playerScoreElement = document.getElementById('player-score');
-    const aiScoreElement = document.getElementById('ai-score');
-    const pauseBtn = document.getElementById('pause-btn');
-    const restartBtn = document.getElementById('restart-btn');
-    const difficultySelect = document.getElementById('difficulty');
+// Game elements
+const gameBoard = document.getElementById('game-board');
+const paddleLeft = document.getElementById('paddle-left');
+const paddleRight = document.getElementById('paddle-right');
+const ball = document.getElementById('ball');
+const playerScoreElement = document.getElementById('player-score');
+const computerScoreElement = document.getElementById('computer-score');
+const startScreen = document.getElementById('start-screen');
+const gameOverScreen = document.getElementById('game-over');
+const gameOverText = document.getElementById('game-over-text');
+const finalScoreElement = document.getElementById('final-score');
+const startBtn = document.getElementById('start-btn');
+const restartBtn = document.getElementById('restart-btn');
+const difficultyButtons = document.querySelectorAll('.difficulty');
+
+// Sounds
+const paddleHitSound = document.getElementById('paddle-hit');
+const wallHitSound = document.getElementById('wall-hit');
+const scoreSound = document.getElementById('score-sound');
+const gameOverSound = document.getElementById('game-over-sound');
+
+// Game variables
+let gameWidth, gameHeight;
+let paddleHeight = 100;
+let paddleWidth = 15;
+let ballSize = 20;
+let playerScore = 0;
+let computerScore = 0;
+let gameRunning = false;
+let difficulty = 'medium';
+let gameInterval;
+
+// Paddle positions
+let leftPaddleY = 0;
+let rightPaddleY = 0;
+
+// Ball position and velocity
+let ballX = 0;
+let ballY = 0;
+let ballSpeedX = 0;
+let ballSpeedY = 0;
+
+// Initialize game dimensions
+function initGameDimensions() {
+    gameWidth = gameBoard.offsetWidth;
+    gameHeight = gameBoard.offsetHeight;
     
-    // Настройки игры
-    const PADDLE_WIDTH = 15;
-    const PADDLE_HEIGHT = 100;
-    const BALL_SIZE = 12;
-    const PADDLE_OFFSET = 30;
-    const WINNING_SCORE = 5;
+    // Center paddles
+    leftPaddleY = (gameHeight - paddleHeight) / 2;
+    rightPaddleY = (gameHeight - paddleHeight) / 2;
     
-    // Игровые объекты
-    const playerPaddle = {
-        x: PADDLE_OFFSET,
-        y: canvas.height / 2 - PADDLE_HEIGHT / 2,
-        width: PADDLE_WIDTH,
-        height: PADDLE_HEIGHT,
-        speed: 8,
-        dy: 0
-    };
+    // Center ball
+    ballX = gameWidth / 2 - ballSize / 2;
+    ballY = gameHeight / 2 - ballSize / 2;
     
-    const aiPaddle = {
-        x: canvas.width - PADDLE_OFFSET - PADDLE_WIDTH,
-        y: canvas.height / 2 - PADDLE_HEIGHT / 2,
-        width: PADDLE_WIDTH,
-        height: PADDLE_HEIGHT,
-        speed: 5, // Будет изменяться в зависимости от сложности
-        dy: 0
-    };
+    updatePositions();
+}
+
+// Update DOM elements positions
+function updatePositions() {
+    paddleLeft.style.top = leftPaddleY + 'px';
+    paddleRight.style.top = rightPaddleY + 'px';
+    ball.style.left = ballX + 'px';
+    ball.style.top = ballY + 'px';
+}
+
+// Reset ball to center with random direction
+function resetBall() {
+    ballX = gameWidth / 2 - ballSize / 2;
+    ballY = gameHeight / 2 - ballSize / 2;
     
-    const ball = {
-        x: canvas.width / 2,
-        y: canvas.height / 2,
-        size: BALL_SIZE,
-        speed: 4,
-        dx: 4,
-        dy: 4
-    };
+    // Random direction but always towards the player who just scored
+    const direction = Math.random() > 0.5 ? 1 : -1;
+    ballSpeedX = 5 * direction;
+    ballSpeedY = (Math.random() * 4 - 2); // Random angle between -2 and 2
+}
+
+// Start new game
+function startGame() {
+    playerScore = 0;
+    computerScore = 0;
+    playerScoreElement.textContent = '0';
+    computerScoreElement.textContent = '0';
     
-    // Состояние игры
-    let playerScore = 0;
-    let aiScore = 0;
-    let gamePaused = false;
-    let gameOver = false;
-    let difficulty = 'medium';
+    initGameDimensions();
+    resetBall();
     
-    // Инициализация игры
-    function init() {
-        // Сбрасываем позиции
-        resetBall();
-        resetPaddles();
+    startScreen.style.display = 'none';
+    gameOverScreen.style.display = 'none';
+    gameRunning = true;
+    
+    if (gameInterval) clearInterval(gameInterval);
+    gameInterval = setInterval(updateGame, 16); // ~60fps
+}
+
+// End game
+function endGame(winner) {
+    gameRunning = false;
+    clearInterval(gameInterval);
+    
+    gameOverText.textContent = winner === 'player' ? 'YOU WIN!' : 'GAME OVER';
+    finalScoreElement.textContent = `${playerScore} - ${computerScore}`;
+    gameOverScreen.style.display = 'flex';
+    
+    gameOverSound.play();
+}
+
+// Update game state
+function updateGame() {
+    if (!gameRunning) return;
+    
+    // Move ball
+    ballX += ballSpeedX;
+    ballY += ballSpeedY;
+    
+    // Ball collision with top and bottom walls
+    if (ballY <= 0 || ballY >= gameHeight - ballSize) {
+        ballSpeedY = -ballSpeedY;
+        wallHitSound.currentTime = 0;
+        wallHitSound.play();
         
-        // Сбрасываем счет
-        playerScore = 0;
-        aiScore = 0;
-        updateScore();
-        
-        // Сбрасываем состояние
-        gamePaused = false;
-        gameOver = false;
-        pauseBtn.textContent = 'Пауза (P)';
-        
-        // Устанавливаем сложность
-        setDifficulty();
-        
-        // Запускаем игровой цикл
-        if (!animationId) {
-            gameLoop();
+        // Add some randomness to bounce
+        if (Math.random() > 0.7) {
+            ballSpeedY *= 1.1;
         }
     }
     
-    // Игровой цикл
-    let animationId;
-    function gameLoop() {
-        if (gameOver) return;
+    // Ball collision with paddles
+    // Left paddle
+    if (ballX <= paddleWidth + 20 && 
+        ballY + ballSize >= leftPaddleY && 
+        ballY <= leftPaddleY + paddleHeight) {
         
-        if (!gamePaused) {
-            update();
-        }
+        // Calculate bounce angle based on where ball hits paddle
+        const hitPosition = (ballY - leftPaddleY) / paddleHeight;
+        const bounceAngle = hitPosition * Math.PI - Math.PI / 2; // -π/2 to π/2
         
-        draw();
+        // Calculate new speed based on difficulty
+        let speed = Math.sqrt(ballSpeedX * ballSpeedX + ballSpeedY * ballSpeedY);
+        speed *= 1.05; // Increase speed slightly with each hit
         
-        animationId = requestAnimationFrame(gameLoop);
+        // Limit max speed
+        const maxSpeed = difficulty === 'easy' ? 12 : difficulty === 'medium' ? 15 : 20;
+        if (speed > maxSpeed) speed = maxSpeed;
+        
+        ballSpeedX = Math.cos(bounceAngle) * speed;
+        ballSpeedY = Math.sin(bounceAngle) * speed;
+        
+        // Ensure ball moves to the right after hitting left paddle
+        ballSpeedX = Math.abs(ballSpeedX);
+        
+        // Small correction to prevent sticking
+        ballX = paddleWidth + 21;
+        
+        paddleHitSound.currentTime = 0;
+        paddleHitSound.play();
     }
     
-    // Обновление игрового состояния
-    function update() {
-        // Двигаем ракетки
-        movePaddles();
+    // Right paddle
+    if (ballX >= gameWidth - paddleWidth - 20 - ballSize && 
+        ballY + ballSize >= rightPaddleY && 
+        ballY <= rightPaddleY + paddleHeight) {
         
-        // Двигаем мяч
-        moveBall();
+        // Calculate bounce angle based on where ball hits paddle
+        const hitPosition = (ballY - rightPaddleY) / paddleHeight;
+        const bounceAngle = hitPosition * Math.PI - Math.PI / 2; // -π/2 to π/2
         
-        // AI для противника
-        aiMovement();
+        // Calculate new speed based on difficulty
+        let speed = Math.sqrt(ballSpeedX * ballSpeedX + ballSpeedY * ballSpeedY);
+        speed *= 1.05; // Increase speed slightly with each hit
+        
+        // Limit max speed
+        const maxSpeed = difficulty === 'easy' ? 12 : difficulty === 'medium' ? 15 : 20;
+        if (speed > maxSpeed) speed = maxSpeed;
+        
+        ballSpeedX = Math.cos(bounceAngle) * speed;
+        ballSpeedY = Math.sin(bounceAngle) * speed;
+        
+        // Ensure ball moves to the left after hitting right paddle
+        ballSpeedX = -Math.abs(ballSpeedX);
+        
+        // Small correction to prevent sticking
+        ballX = gameWidth - paddleWidth - 21 - ballSize;
+        
+        paddleHitSound.currentTime = 0;
+        paddleHitSound.play();
     }
     
-    // Отрисовка игры
-    function draw() {
-        // Очищаем canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Scoring
+    if (ballX < 0) {
+        computerScore++;
+        computerScoreElement.textContent = computerScore;
+        scoreSound.currentTime = 0;
+        scoreSound.play();
         
-        // Рисуем разделительную линию
-        drawDashedLine();
-        
-        // Рисуем ракетки
-        drawPaddle(playerPaddle);
-        drawPaddle(aiPaddle);
-        
-        // Рисуем мяч
-        drawBall();
-        
-        // Если игра на паузе
-        if (gamePaused) {
-            drawPauseText();
-        }
-        
-        // Если игра окончена
-        if (gameOver) {
-            drawGameOverText();
-        }
-    }
-    
-    // Рисуем разделительную линию
-    function drawDashedLine() {
-        ctx.strokeStyle = '#444';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([10, 10]);
-        ctx.beginPath();
-        ctx.moveTo(canvas.width / 2, 0);
-        ctx.lineTo(canvas.width / 2, canvas.height);
-        ctx.stroke();
-        ctx.setLineDash([]);
-    }
-    
-    // Рисуем ракетку
-    function drawPaddle(paddle) {
-        ctx.fillStyle = '#4CAF50';
-        ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-        
-        // Добавляем градиент для эффекта объема
-        const gradient = ctx.createLinearGradient(
-            paddle.x, paddle.y, 
-            paddle.x + paddle.width, paddle.y
-        );
-        gradient.addColorStop(0, '#2E7D32');
-        gradient.addColorStop(1, '#66BB6A');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-    }
-    
-    // Рисуем мяч
-    function drawBall() {
-        ctx.fillStyle = '#fff';
-        ctx.beginPath();
-        ctx.arc(ball.x, ball.y, ball.size, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Добавляем свечение
-        ctx.shadowColor = '#4CAF50';
-        ctx.shadowBlur = 10;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-    }
-    
-    // Рисуем текст паузы
-    function drawPauseText() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        ctx.fillStyle = '#fff';
-        ctx.font = '48px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('ПАУЗА', canvas.width / 2, canvas.height / 2);
-    }
-    
-    // Рисуем текст окончания игры
-    function drawGameOverText() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        ctx.fillStyle = '#fff';
-        ctx.font = '48px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText(
-            playerScore > aiScore ? 'ВЫ ПОБЕДИЛИ!' : 'ВЫ ПРОИГРАЛИ!', 
-            canvas.width / 2, 
-            canvas.height / 2 - 40
-        );
-        
-        ctx.font = '24px Arial';
-        ctx.fillText(
-            `Счет: ${playerScore} - ${aiScore}`, 
-            canvas.width / 2, 
-            canvas.height / 2 + 20
-        );
-        
-        ctx.fillText(
-            'Нажмите R для новой игры', 
-            canvas.width / 2, 
-            canvas.height / 2 + 60
-        );
-    }
-    
-    // Движение ракеток
-    function movePaddles() {
-        // Игрок
-        playerPaddle.y += playerPaddle.dy;
-        
-        // Ограничиваем движение ракетки игрока
-        if (playerPaddle.y < 0) {
-            playerPaddle.y = 0;
-        } else if (playerPaddle.y + playerPaddle.height > canvas.height) {
-            playerPaddle.y = canvas.height - playerPaddle.height;
-        }
-        
-        // AI
-        aiPaddle.y += aiPaddle.dy;
-        
-        // Ограничиваем движение ракетки AI
-        if (aiPaddle.y < 0) {
-            aiPaddle.y = 0;
-        } else if (aiPaddle.y + aiPaddle.height > canvas.height) {
-            aiPaddle.y = canvas.height - aiPaddle.height;
-        }
-    }
-    
-    // Движение мяча
-    function moveBall() {
-        ball.x += ball.dx;
-        ball.y += ball.dy;
-        
-        // Столкновение с верхней и нижней стенкой
-        if (ball.y - ball.size < 0 || ball.y + ball.size > canvas.height) {
-            ball.dy *= -1;
-        }
-        
-        // Столкновение с ракеткой игрока
-        if (
-            ball.x - ball.size < playerPaddle.x + playerPaddle.width &&
-            ball.y > playerPaddle.y &&
-            ball.y < playerPaddle.y + playerPaddle.height &&
-            ball.dx < 0
-        ) {
-            const hitPosition = (ball.y - (playerPaddle.y + playerPaddle.height / 2)) / (playerPaddle.height / 2);
-            const angle = hitPosition * Math.PI / 4;
-            
-            ball.dx = ball.speed * Math.cos(angle);
-            ball.dy = ball.speed * Math.sin(angle);
-            
-            // Увеличиваем скорость после удара
-            ball.speed += 0.2;
-        }
-        
-        // Столкновение с ракеткой AI
-        if (
-            ball.x + ball.size > aiPaddle.x &&
-            ball.y > aiPaddle.y &&
-            ball.y < aiPaddle.y + aiPaddle.height &&
-            ball.dx > 0
-        ) {
-            const hitPosition = (ball.y - (aiPaddle.y + aiPaddle.height / 2)) / (aiPaddle.height / 2);
-            const angle = hitPosition * Math.PI / 4;
-            
-            ball.dx = -ball.speed * Math.cos(angle);
-            ball.dy = ball.speed * Math.sin(angle);
-            
-            // Увеличиваем скорость после удара
-            ball.speed += 0.2;
-        }
-        
-        // Гол за игрока (мяч ушел за AI)
-        if (ball.x + ball.size > canvas.width) {
-            playerScore++;
-            updateScore();
-            resetBall();
-        }
-        
-        // Гол за AI (мяч ушел за игрока)
-        if (ball.x - ball.size < 0) {
-            aiScore++;
-            updateScore();
-            resetBall();
-        }
-        
-        // Проверяем окончание игры
-        if (playerScore >= WINNING_SCORE || aiScore >= WINNING_SCORE) {
-            gameOver = true;
-            cancelAnimationFrame(animationId);
-            animationId = null;
-        }
-    }
-    
-    // AI для противника
-    function aiMovement() {
-        // Простое следование за мячом с учетом сложности
-        const aiPaddleCenter = aiPaddle.y + aiPaddle.height / 2;
-        const ballCenter = ball.y;
-        
-        // В зависимости от сложности меняем точность AI
-        let reactionFactor;
-        switch (difficulty) {
-            case 'easy':
-                reactionFactor = 0.3;
-                aiPaddle.speed = 4;
-                break;
-            case 'medium':
-                reactionFactor = 0.7;
-                aiPaddle.speed = 5;
-                break;
-            case 'hard':
-                reactionFactor = 0.9;
-                aiPaddle.speed = 6;
-                break;
-        }
-        
-        if (ballCenter < aiPaddleCenter - 10) {
-            aiPaddle.dy = -aiPaddle.speed * reactionFactor;
-        } else if (ballCenter > aiPaddleCenter + 10) {
-            aiPaddle.dy = aiPaddle.speed * reactionFactor;
+        if (computerScore >= 5) {
+            endGame('computer');
         } else {
-            aiPaddle.dy = 0;
+            resetBall();
         }
     }
     
-    // Сброс мяча после гола
-    function resetBall() {
-        ball.x = canvas.width / 2;
-        ball.y = canvas.height / 2;
-        ball.speed = 4;
-        
-        // Случайное направление
-        const angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
-        const direction = Math.random() > 0.5 ? 1 : -1;
-        
-        ball.dx = direction * ball.speed * Math.cos(angle);
-        ball.dy = ball.speed * Math.sin(angle);
-    }
-    
-    // Сброс позиций ракеток
-    function resetPaddles() {
-        playerPaddle.y = canvas.height / 2 - playerPaddle.height / 2;
-        aiPaddle.y = canvas.height / 2 - aiPaddle.height / 2;
-    }
-    
-    // Обновление счета
-    function updateScore() {
+    if (ballX > gameWidth) {
+        playerScore++;
         playerScoreElement.textContent = playerScore;
-        aiScoreElement.textContent = aiScore;
+        scoreSound.currentTime = 0;
+        scoreSound.play();
+        
+        if (playerScore >= 5) {
+            endGame('player');
+        } else {
+            resetBall();
+        }
     }
     
-    // Установка сложности
-    function setDifficulty() {
-        difficulty = difficultySelect.value;
+    // Computer AI (right paddle)
+    if (difficulty !== 'easy') {
+        // Medium and hard AI
+        const paddleCenter = rightPaddleY + paddleHeight / 2;
+        const ballCenter = ballY + ballSize / 2;
+        
+        // Predict where ball will be
+        let predictedY = ballCenter;
+        if (ballSpeedX > 0) {
+            const timeToReach = (gameWidth - paddleWidth - 20 - ballSize - ballX) / ballSpeedX;
+            predictedY = ballCenter + ballSpeedY * timeToReach;
+            
+            // Keep within bounds
+            predictedY = Math.max(paddleHeight / 2, Math.min(gameHeight - paddleHeight / 2, predictedY));
+        }
+        
+        // Move towards predicted position
+        const aiSpeed = difficulty === 'medium' ? 6 : 8;
+        if (paddleCenter < predictedY - 10) {
+            rightPaddleY += aiSpeed;
+        } else if (paddleCenter > predictedY + 10) {
+            rightPaddleY -= aiSpeed;
+        }
+    } else {
+        // Easy AI - simply follows the ball
+        const paddleCenter = rightPaddleY + paddleHeight / 2;
+        const ballCenter = ballY + ballSize / 2;
+        
+        if (paddleCenter < ballCenter - 10) {
+            rightPaddleY += 4;
+        } else if (paddleCenter > ballCenter + 10) {
+            rightPaddleY -= 4;
+        }
     }
     
-    // Обработчики событий клавиатуры
-    const keys = {};
-    document.addEventListener('keydown', (e) => {
-        keys[e.key] = true;
-        
-        // Пауза по P
-        if (e.key === 'p' || e.key === 'P' || e.key === 'з' || e.key === 'З') {
-            togglePause();
-        }
-        
-        // Рестарт по R
-        if (e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К') {
-            init();
-        }
+    // Keep paddles within bounds
+    leftPaddleY = Math.max(0, Math.min(gameHeight - paddleHeight, leftPaddleY));
+    rightPaddleY = Math.max(0, Math.min(gameHeight - paddleHeight, rightPaddleY));
+    
+    updatePositions();
+}
+
+// Event listeners
+window.addEventListener('resize', initGameDimensions);
+
+// Keyboard controls
+document.addEventListener('keydown', (e) => {
+    if (!gameRunning) return;
+    
+    const paddleSpeed = 8;
+    
+    // Player (left paddle) controls - W/S
+    if (e.key === 'w' || e.key === 'W' || e.key === 'ц' || e.key === 'Ц') {
+        leftPaddleY -= paddleSpeed;
+    } else if (e.key === 's' || e.key === 'S' || e.key === 'ы' || e.key === 'Ы') {
+        leftPaddleY += paddleSpeed;
+    }
+    
+    // Computer (right paddle) controls - Arrow Up/Down (for testing)
+    if (e.key === 'ArrowUp') {
+        rightPaddleY -= paddleSpeed;
+    } else if (e.key === 'ArrowDown') {
+        rightPaddleY += paddleSpeed;
+    }
+});
+
+// Start and restart buttons
+startBtn.addEventListener('click', startGame);
+restartBtn.addEventListener('click', startGame);
+
+// Difficulty buttons
+difficultyButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        difficulty = button.dataset.level;
+        difficultyButtons.forEach(btn => btn.style.opacity = '0.6');
+        button.style.opacity = '1';
     });
-    
-    document.addEventListener('keyup', (e) => {
-        keys[e.key] = false;
-    });
-    
-    // Обработка нажатий клавиш для управления
-    function handleKeyPresses() {
-        // Игрок 1 (W/S или стрелки вверх/вниз)
-        playerPaddle.dy = 0;
-        
-        if (keys['w'] || keys['W'] || keys['ArrowUp'] || keys['ц'] || keys['Ц']) {
-            playerPaddle.dy = -playerPaddle.speed;
-        }
-        
-        if (keys['s'] || keys['S'] || keys['ArrowDown'] || keys['ы'] || keys['Ы']) {
-            playerPaddle.dy = playerPaddle.speed;
-        }
-    }
-    
-    // Переключение паузы
-    function togglePause() {
-        gamePaused = !gamePaused;
-        pauseBtn.textContent = gamePaused ? 'Продолжить (P)' : 'Пауза (P)';
-        
-        if (!gamePaused && !gameOver && !animationId) {
-            gameLoop();
-        }
-    }
-    
-    // Обработчики кнопок
-    pauseBtn.addEventListener('click', togglePause);
-    restartBtn.addEventListener('click', init);
-    difficultySelect.addEventListener('change', setDifficulty);
-    
-    // Запускаем игру
-    init();
-    
-    // Основной цикл обработки ввода
-    function inputLoop() {
-        handleKeyPresses();
-        requestAnimationFrame(inputLoop);
-    }
-    
-    inputLoop();
+});
+
+// Initialize game on load
+window.addEventListener('load', () => {
+    initGameDimensions();
+    // Set medium difficulty as default
+    document.querySelector('.difficulty[data-level="medium"]').style.opacity = '1';
 });

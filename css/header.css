@@ -1,60 +1,46 @@
-.header {
-    box-shadow: 2px 4px 8px 0px #0000001a;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: background-color 0.3s, color 0.3s;
-  }
-
-
-.header__body{
-    display: flex;
-    padding: 20px 0;
-    align-items: center;
-    gap: 20px;
+header {
+  background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
+  color: white;
+  padding: 20px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-
-.header__logo{
-    width: 30%;
-    height: 30%;
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.header__account{
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
-.account{
-    position: relative;
-
-    @media (max-width: 600px) {
-        display: none;
-      }
+.logo i {
+  margin-right: 10px;
+  font-size: 32px;
 }
 
-.account__body {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  
-    cursor: pointer;
-  }
-  
-  .account__avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
-  
-  .account__info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  
-    @media (max-width: 1000px) {
-      display: none;
-    }
-  }
-  
-  .account__name {
-    color: var(--dark);
-  }
-  
+nav ul {
+  display: flex;
+  list-style: none;
+}
+
+nav ul li {
+  margin-left: 25px;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+nav ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}

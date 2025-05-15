@@ -1,41 +1,49 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pong</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
+    <title>Pro Ping Pong</title>
 </head>
 <body>
-    <div class="game-container">
-        <h1>Pong</h1>
-        <div class="score-container">
-            <div class="score" id="player-score">0</div>
-            <div class="score" id="ai-score">0</div>
-        </div>
-        
-        <canvas id="game-canvas" width="800" height="500"></canvas>
-        
-        <div class="controls">
-            <div class="difficulty">
-                <label for="difficulty">Сложность:</label>
-                <select id="difficulty">
-                    <option value="easy">Легкая</option>
-                    <option value="medium" selected>Средняя</option>
-                    <option value="hard">Сложная</option>
-                </select>
+    <div id="game-container">
+        <div id="game-board">
+            <div id="center-line"></div>
+            <div id="paddle-left" class="paddle"></div>
+            <div id="paddle-right" class="paddle"></div>
+            <div id="ball"></div>
+            <div id="score">
+                <div id="player-score">0</div>
+                <div id="computer-score">0</div>
             </div>
-            <button id="pause-btn">Пауза (P)</button>
-            <button id="restart-btn">Новая игра (R)</button>
-            <button onclick="window.history.back()">Назад</button>
-        </div>
-        
-        <div class="instructions">
-            <p>Управление: W/S или ↑/↓</p>
-            <p>Пауза: P | Новая игра: R</p>
+            <div id="controls">
+                Player: W/S keys | Computer: Arrow Up/Down keys
+            </div>
+            
+            <div id="start-screen">
+                <h1>PING PONG PRO</h1>
+                <div id="difficulty-buttons">
+                    <button class="difficulty" data-level="easy">Easy</button>
+                    <button class="difficulty" data-level="medium">Medium</button>
+                    <button class="difficulty" data-level="hard">Hard</button>
+                </div>
+                <button id="start-btn">Start Game</button>
+            </div>
+            
+            <div id="game-over">
+                <h1 id="game-over-text">GAME OVER</h1>
+                <div id="final-score" style="font-size: 2rem; margin-bottom: 20px;"></div>
+                <button id="restart-btn">Play Again</button>
+                <button class="restart-btn" onclick="window.history.back()">Exit</button>
+            </div>
         </div>
     </div>
-    
-    <script src="script.js"></script>
+
+    <audio id="paddle-hit" src="https://assets.mixkit.co/sfx/preview/mixkit-game-click-1114.mp3" preload="auto"></audio>
+    <audio id="wall-hit" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3" preload="auto"></audio>
+    <audio id="score-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" preload="auto"></audio>
+    <audio id="game-over-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-retro-arcade-lose-2027.mp3" preload="auto"></audio>
+    <script src="./script.js"></script>
 </body>
 </html>

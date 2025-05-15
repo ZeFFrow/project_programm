@@ -7,43 +7,97 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=National+Park:wght@200..800&family=Roboto:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Игры-онлайн</title>
+    <link rel="icon" href="https://example.com/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <header class="header">
         <div class="container">
-            <div class="header__body">
-                <a href="index.html" class="header__logo">
-                    <img src="img/ikon.jpg" class="header__logo" alt="Игры-онлайн"/>
-                </a>
-                <!-- Профиль -->
-                <a href="#" class="header__account account">
-                    <div class="account__body">
-                        <img
-                          src="img/avatar.png"
-                          alt="avatar"
-                          class="account__avatar"
-                        />
-                        <div class="account__info">
-                          <div class="account__name">Player</div>
+            <header>
+                <div class="container">
+                    <div class="header-content">
+                        <div class="logo">
+                            <i class="fas fa-gamepad"></i>
+                            <span>OnlineGame</span>
                         </div>
+                        <nav>
+                            <ul>
+                                <li><a href="#"><i class="fas fa-home"></i> Главная</a></li>
+                                <li><a href="#games"><i class="fas fa-dice"></i> Игры</a></li>
+                                <li><a href="#about"><i class="fas fa-info-circle"></i> О нас</a></li>
+                            </ul>
+                        </nav>
                     </div>
-                </a>
-                <!-- <button id="theme-toggle">Переключить тему</button> -->
-            </div>
+                </div>
+            </header>
         </div>
     </header>
     <main>
-        <div class="container">
-            <h1 class="title__text">Все игры</h1>
-                <div class="catalog">
-                    <ul class="games">
+        <section class="hero">
+            <div class="container">
+                <h1>Откройте мир увлекательных мини-игр</h1>
+                <p>Играйте бесплатно в наши захватывающие игры прямо в браузере. Никаких скачиваний, только чистое удовольствие!</p>
+                <a href="#games" class="btn">Начать играть</a>
+            </div>
+        </section>
+
+        <section class="games-section" id="games">
+            <div class="container">
+                <h2>Наши игры</h2>
+                <div class="games-grid">
+                    <ul class="gamesjs">
                         <!-- Все игры -->
+                    </ul>  
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section" id="about">
+            <div class="container">
+                <h2>О нашем проекте</h2>
+                <p>OnlineGame - это коллекция увлекательных мини-игр, доступных прямо в вашем браузере. Наша цель - предоставить вам простой и удобный способ отвлечься от рутины и насладиться классическими и новыми играми.</p>
+                <p>Все игры абсолютно бесплатны и не требуют регистрации. Просто выберите игру и начинайте играть!</p>
+            </div>
+        </section>
+    </main>
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>OnlineGame</h3>
+                    <p>Лучшие мини-игры в одном месте. Играйте бесплатно в любое время!</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Меню</h3>
+                    <ul>
+                        <li><a href="#">Главная</a></li>
+                        <li><a href="#games">Игры</a></li>
+                        <li><a href="#about">О нас</a></li>
                     </ul>
                 </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> wincode@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> +7 (777) 777-7777</li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Соцсети</h3>
+                    <ul>
+                        <li><a href="https://vk.com/academy_wincode?from=search"><i class="fab fa-vk"></i> ВКонтакте</a></li>
+                        <li><a href="https://t.me/academy_wincode"><i class="fab fa-telegram"></i> Telegram</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 OnlineGame</p>
+            </div>
         </div>
-    </main>
+    </footer>
     <script src="./js/script.js" type="module"></script>
-    <script src="./js/theme-toggle.js" type="module"></script>
 </body>
 </html> 
+
+
