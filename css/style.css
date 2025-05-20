@@ -8,10 +8,21 @@
     list-style: none;
 }
 
+html{
+    height: 100%;
+}
+
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+}
+
 body {
     background-color: #f0f2f5;
     color: #333;
     line-height: 1.6;
+    height: 100%;
 }
 
 .container {
@@ -70,10 +81,11 @@ main {
     color: #444;
 }
 
-.games-grid {
-    display: grid;
+.gamesjs {
+    display: flex;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 30px;
+    
 }
 
 .game-card {
@@ -82,7 +94,7 @@ main {
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    object-fit: cover
+    object-fit: cover;
 }
 
 .game-card:hover {
@@ -96,7 +108,7 @@ main {
     background-color: #ddd;
     background-position: center;
     object-fit: cover;
-    position: relative;
+
 }
 
 .game-info {
